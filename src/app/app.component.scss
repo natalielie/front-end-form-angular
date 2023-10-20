@@ -1,0 +1,42 @@
+.container {
+  width: 700px;
+  margin-top: 50px;
+}
+
+.form {
+  width: 400 px;
+  margin: 0 px auto;
+  margin-top: 200 px;
+}
+
+.form-control {
+  display: block;
+}
+
+fieldset {
+  margin-top: 10px;
+}
+
+button {
+  margin-bottom: 10px;
+}
+
+[id^="hobbyName"] {
+  width: 85%;
+  margin-bottom: 10px;
+}
+
+#delete-button {
+  float: right;
+  margin-top: -48px;
+}
+
+.btn.btn-primary {
+  width: fit-content;
+  margin-top: 10px;
+}
+
+#submit-button-div {
+  display: flex;
+  justify-content: center;
+}
