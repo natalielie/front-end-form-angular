@@ -1,15 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl,
-  NgForm,
   FormArray,
+  FormGroupDirective,
 } from '@angular/forms';
 
+import { ConfigService } from './services/config.service';
 import { frameworksWithVer } from './utils/frameworks';
-import { Subject, takeUntil } from 'rxjs';
+import { CustomValidators } from './utils/custom-validators';
+import { Subject, delay, of, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -20,11 +22,16 @@ export class AppComponent implements OnInit, OnDestroy {
   userForm!: FormGroup;
   selectedFramework: string = '';
   selectedVersion: string = '';
-  currentHobby!: string;
-  #destroy: Subject<boolean> = new Subject<boolean>();
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+
+  /**
+   * A reference to the `userForm` template within the component's view.
+   * This allows for direct interaction with the form's underlying `FormGroupDirective`.
+   */
+  @ViewChild('userForm', { static: false }) formReference?: FormGroupDirective;
 
   constructor(
-    //private configService: ConfigService,
+    public configService: ConfigService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -32,47 +39,39 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userForm = this.formBuilder.group({
       firstName: new FormControl<string>('', [Validators.required]),
       lastName: new FormControl<string>('', [Validators.required]),
-      dateOfBirth: new FormControl<Date>(new Date(), [Validators.required]),
+      dateOfBirth: new FormControl<Date>(new Date(), [
+        Validators.required,
+        CustomValidators.minimumAgeValidator(),
+      ]),
       framework: new FormControl('', [Validators.required]),
       frameworkVersion: new FormControl('', [Validators.required]),
-      email: new FormControl<string>(
-        '',
-        Validators.compose([
+      email: new FormControl<string>('', {
+        validators: [
           Validators.required,
           Validators.email,
-          // emailDomainValidator,
-        ])
-      ),
-      hobbies: this.formBuilder.array([new FormControl<string>('')]),
+          Validators.pattern('[^ @]*@[^ @]*'),
+          CustomValidators.emailValidator(this.configService),
+        ],
+      }),
+      hobbies: this.formBuilder.array([
+        new FormControl<string>('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+        ]),
+      ]),
     });
 
-    /* this.userForm = this.fb.group({
-      firstName: this.fb.control<string>('', [Validators.required]),
-      lastName: this.fb.control<string>('', [Validators.required]),
-      dateOfBirth: this.fb.control<Date>(new Date(), [Validators.required]),
-      framework: this.fb.control(this.selectedFramework),
-      frameworkVersion: this.fb.control(this.selectedVersion),
-      email: this.fb.control<string>(
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.email,
-          emailDomainValidator,
-        ])
-      ),
-      hobbies: this.fb.array([], Validators.required),
-    });*/
-
     this.userForm.valueChanges
-      .pipe(takeUntil(this.#destroy))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         console.log('changed value', value);
       });
   }
 
   ngOnDestroy() {
-    this.#destroy.next(true);
-    this.#destroy.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   get frameworks(): string[] {
@@ -104,12 +103,39 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userForm.controls['frameworkVersion'].setValue(this.selectedVersion);
   }
 
-  onSubmit() {
-    console.log(this.selectedFramework);
-    console.log(this.selectedVersion);
-    //this.user = this.userForm.getRawValue();
-    console.log(this.userForm.value);
-
-    this.userForm.disable();
+  onSubmit(): void {
+    /*.subscribe({
+        next: (): void => {
+          // reset form to initial state
+          this.userForm.reset();
+          this.selectedFramework = '';
+          this.selectedVersion = '';
+        },
+        error: (err): void =>
+          this.userForm.get('email')?.setErrors({ isExists: err.message }),
+      });*/
+    //alert('Sorry, this email is already taken. Please, choose another one');
+    //console.log(this.configService.getUsers().subscribe());
+    if (this.userForm.valid) {
+      this.configService
+        .addUser(this.userForm.value)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            of(null)
+              .pipe(
+                delay(3000),
+                tap(() => {
+                  this.formReference?.resetForm();
+                  this.selectedFramework = '';
+                  this.selectedVersion = '';
+                  this.hobbies.clear();
+                }),
+                takeUntil(this.destroy$)
+              )
+              .subscribe();
+          },
+        });
+    }
   }
 }

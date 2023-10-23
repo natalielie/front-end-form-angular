@@ -26,6 +26,12 @@ button {
   margin-bottom: 10px;
 }
 
+mat-select:disabled {
+  background-color: dimgrey !important;
+  color: linen;
+  opacity: 1;
+}
+
 #delete-button {
   float: right;
   margin-top: -48px;

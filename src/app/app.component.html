@@ -7,10 +7,10 @@
         </div>
         <div class="card-body">
           <form class="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
-            <fieldset class="form-group">
+            <fieldset>
               <h4>Main Info</h4>
               <div class="form-group">
-                <label>First Name</label>
+                <label>First Name*</label>
                 <input
                   class="form-control"
                   type="text"
@@ -18,18 +18,19 @@
                   placeholder="First Name"
                 />
               </div>
-              <!--<span
+              <span
                 class="text-danger"
                 *ngIf="
-                  userForm.controls['firstName'].touched &&
-                  userForm.controls['firstName'].errors!['required']
+                  userForm.controls['firstName'].invalid &&
+                  (userForm.controls['firstName'].dirty ||
+                    userForm.controls['firstName'].touched)
                 "
               >
                 First name is required
-              </span>-->
+              </span>
 
               <div class="form-group">
-                <label>Last Name</label>
+                <label>Last Name*</label>
                 <input
                   class="form-control"
                   type="text"
@@ -37,18 +38,19 @@
                   placeholder="Last Name"
                 />
               </div>
-              <!--<span
-              class="text-danger"
-              *ngIf="
-                userForm.controls.lastName.touched &&
-                userForm.controls.lastName.errors!['required']
-              "
-            >
-              Last name is required
-            </span>-->
+              <span
+                class="text-danger"
+                *ngIf="
+                  userForm.controls['lastName'].invalid &&
+                  (userForm.controls['lastName'].dirty ||
+                    userForm.controls['lastName'].touched)
+                "
+              >
+                Last name is required
+              </span>
 
               <div class="form-group">
-                <label>Date of Birth</label>
+                <label>Date of Birth*</label>
                 <input
                   class="form-control"
                   type="date"
@@ -56,18 +58,17 @@
                   placeholder="birth-date"
                 />
               </div>
-              <!--<span
-              class="text-danger"
-              *ngIf="
-                userForm.controls.dateOfBirth.touched &&
-                userForm.controls.dateOfBirth.errors!['required']
-              "
-            >
-              Date of Birth is required
-            </span>-->
-
+              <span
+                class="text-danger"
+                *ngIf="
+                  userForm.get('dateOfBirth')?.hasError('ageInvalid') &&
+                  (userForm.controls['email'].dirty ||
+                    userForm.controls['email'].touched)
+                "
+                >Sorry, you are too young
+              </span>
               <div class="form-group">
-                <label>Email</label>
+                <label>Email*</label>
                 <input
                   class="form-control"
                   type="email"
@@ -75,60 +76,81 @@
                   placeholder="Email"
                 />
               </div>
-              <!-- <span
-              class="text-danger"
-              *ngIf="
-                userForm.controls.email.touched &&
-                userForm.controls.email.errors!['required']
-              "
-            >
-              Email is required
-            </span>-->
-              <!--<div
-    class="error"
-    *ngIf="(userForm?.controls?.email?.errors)!['errorEmailDomain']"
-  >
-    Should contain the @scaler.com domain
-  </div>-->
+              <span
+                class="text-danger"
+                *ngIf="
+                  userForm.get('email')!.hasError('emailTaken') &&
+                  (userForm.controls['email'].dirty ||
+                    userForm.controls['email'].touched)
+                "
+                >Such email already exists
+              </span>
+              <span
+                class="text-danger"
+                *ngIf="
+                  userForm.controls['email'].invalid &&
+                  (userForm.controls['email'].dirty ||
+                    userForm.controls['email'].touched)
+                "
+              >
+                Email is required
+              </span>
             </fieldset>
             <fieldset class="form-group">
               <h4>Technology</h4>
               <div class="form-group">
-                <label>Front-End Framework</label>
-                <mat-select
+                <label>Front-End Framework*</label>
+                <select
                   class="form-control"
                   [(ngModel)]="selectedFramework"
                   name="framework"
-                  [ngModelOptions]="{ standalone: true }"
+                  formControlName="framework"
                   [value]="onFramworkChange()"
                 >
-                  <mat-option
+                  <option
                     *ngFor="let framework of frameworks"
-                    [value]="framework"
+                    [ngValue]="framework"
                   >
                     {{ framework }}
-                  </mat-option>
-                </mat-select>
+                  </option>
+                </select>
               </div>
+              <span
+                class="text-danger"
+                *ngIf="
+                  selectedFramework === '' &&
+                  (userForm.controls['framework'].dirty ||
+                    userForm.controls['framework'].touched)
+                "
+              >
+                Framework is required
+              </span>
 
               <div class="form-group">
-                <label>Front-End Technology Version</label>
-                <mat-select
+                <label>Front-End Technology Version*</label>
+                <select
                   class="form-control"
                   [(ngModel)]="selectedVersion"
                   name="framework-version"
-                  [ngModelOptions]="{ standalone: true }"
-                  *ngIf="selectedFramework != undefined"
+                  formControlName="frameworkVersion"
                   [value]="onVersionChange()"
+                  [disabled]="selectedFramework === ''"
                 >
-                  <mat-option
-                    *ngFor="let version of versions"
-                    [value]="version"
-                  >
+                  <option *ngFor="let version of versions" [value]="version">
                     {{ version }}
-                  </mat-option>
-                </mat-select>
+                  </option>
+                </select>
               </div>
+              <span
+                class="text-danger"
+                *ngIf="
+                  selectedVersion === '' &&
+                  (userForm.controls['frameworkVersion'].dirty ||
+                    userForm.controls['frameworkVersion'].touched)
+                "
+              >
+                Framework version is required
+              </span>
             </fieldset>
 
             <fieldset class="form-group">
@@ -136,26 +158,37 @@
               <ol>
                 <li
                   formArrayName="hobbies"
-                  *ngFor="let control of hobbies.controls; let i = index"
+                  *ngFor="let control of hobbies.controls; let index = index"
                 >
                   <div class="form-group">
                     <input
                       class="form-control"
                       type="text"
-                      id="{{ 'hobbyName' + i }}"
-                      formControlName="hobbyName"
-                      placeholder="Hobby Name"
+                      id="{{ 'hobbyName' + index }}"
+                      formControlName="{{ index }}"
+                      placeholder="Hobby name"
                     />
                   </div>
                   <button
                     class="btn btn-danger"
                     id="delete-button"
                     type="button"
-                    (click)="removeHobby(i)"
+                    (click)="removeHobby(index)"
                     [disabled]="hobbies.controls.length <= 1"
                   >
                     ×
                   </button>
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      hobbies.controls[index].invalid &&
+                      hobbies.controls.length < 2 &&
+                      (hobbies.controls[index].dirty ||
+                        hobbies.controls[index].touched)
+                    "
+                  >
+                    At least 1 hobby is required
+                  </span>
                 </li>
               </ol>
               <button
@@ -166,16 +199,16 @@
                 Add new hobby
               </button>
             </fieldset>
+            <div class="form-group" id="submit-button-div">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="!userForm.valid"
+              >
+                Submit
+              </button>
+            </div>
           </form>
-          <div class="form-group" id="submit-button-div">
-            <button
-              class="btn btn-primary"
-              type="submit"
-              [disabled]="!userForm.valid"
-            >
-              Submit
-            </button>
-          </div>
         </div>
       </div>
     </div>
