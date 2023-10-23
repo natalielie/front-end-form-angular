@@ -1,0 +1,11 @@
+{
+  "users": {
+    "firstName": "Kinder",
+    "lastName": "Bueno",
+    "email": "test.test@test.com",
+    "dateOfBirth": "04-05-1992",
+    "framework": "Angular",
+    "frameworkVersion": "1.2.1",
+    "hobby": { "0": "playing the ukulele" }
+  }
+}
