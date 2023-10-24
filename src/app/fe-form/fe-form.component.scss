@@ -1,0 +1,89 @@
+.container {
+  width: 700px;
+  margin-top: 50px;
+}
+
+.form-control {
+  display: block;
+}
+
+.form-group {
+  display: grid;
+}
+
+mat-error {
+  margin: -20px 0 20px;
+}
+
+mat-select {
+  height: 55px;
+  width: 300px;
+}
+
+fieldset {
+  margin-top: 10px;
+}
+
+input {
+  width: 300px;
+}
+
+.mat-form-field-label-wrapper {
+  height: 40px;
+}
+
+mat-form-field {
+  width: 300px;
+}
+
+button {
+  margin-bottom: 10px;
+}
+
+[id^="hobbyName"] {
+  width: 85%;
+  margin-bottom: 10px;
+}
+
+mat-select:disabled {
+  background-color: dimgrey !important;
+  color: linen;
+  opacity: 1;
+}
+
+li {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#delete-button {
+  margin: -73px 310px 40px;
+}
+
+.btn.btn-primary {
+  width: 100px;
+  margin-top: 10px;
+}
+
+.btn-outline-primary {
+  width: 150px;
+  margin-top: -20px;
+}
+
+#submit-button-div {
+  display: flex;
+  justify-content: center;
+}
+
+#hobbies {
+  margin: 30px -30px;
+}
+
+#hobbies h4,
+.btn-outline-primary {
+  margin-left: 30px;
+}
+
+.frameworks-error {
+  margin-top: 1px;
+}
