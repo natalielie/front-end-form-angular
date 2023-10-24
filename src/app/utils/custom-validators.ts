@@ -6,10 +6,16 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { ConfigService } from '../services/config.service';
+import { UserService } from '../services/user-api.service';
 import { Observable, catchError, map, of, switchMap, timer } from 'rxjs';
 
+/**
+ * A class with custom validators
+ */
 export class CustomValidators {
+  /**
+   * validation of minimum age
+   */
   static minimumAgeValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (!control.value) {
@@ -28,7 +34,10 @@ export class CustomValidators {
     };
   }
 
-  static emailValidator(configService: ConfigService): AsyncValidatorFn {
+  /**
+   * validion of existing email
+   */
+  static emailValidator(configService: UserService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return configService.checkEmailExists(control.value).pipe(
         map((isEmailTaken) => (isEmailTaken ? { emailTaken: true } : null)),
