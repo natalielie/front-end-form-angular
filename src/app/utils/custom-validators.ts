@@ -1,13 +1,12 @@
 import {
   AbstractControl,
   AsyncValidatorFn,
-  FormControl,
-  FormGroup,
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { UserService } from '../services/user-api.service';
 import { Observable, catchError, map, of, switchMap, timer } from 'rxjs';
+
+import { UserService } from '../services/user-api.service';
 
 /**
  * A class with custom validators

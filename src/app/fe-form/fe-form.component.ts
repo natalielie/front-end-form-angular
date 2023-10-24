@@ -23,6 +23,12 @@ import { CustomValidators } from '../utils/custom-validators';
   styleUrls: ['./fe-form.component.scss'],
 })
 export class FeFormComponent implements OnInit, OnDestroy {
+  /**
+   * A reference to the `userForm` template within the component's view.
+   * Allows working with a form reference, not form itself
+   */
+  @ViewChild('userForm', { static: false }) formReference?: FormGroupDirective;
+
   userForm!: FormGroup;
   selectedFramework: string = '';
   selectedVersion: string = '';
@@ -30,12 +36,6 @@ export class FeFormComponent implements OnInit, OnDestroy {
    * A subject to prevent memory leaks
    */
   private destroy$: Subject<boolean> = new Subject<boolean>();
-
-  /**
-   * A reference to the `userForm` template within the component's view.
-   * Allows working with a form reference, not form itself
-   */
-  @ViewChild('userForm', { static: false }) formReference?: FormGroupDirective;
 
   constructor(
     public UserService: UserService,
@@ -114,14 +114,14 @@ export class FeFormComponent implements OnInit, OnDestroy {
   /**
    * Adding hobby to a hobby array
    */
-  addHobby() {
+  addHobby(): void {
     this.hobbies.push(this.formBuilder.control(''));
   }
 
   /**
    * deleting a hobby on user's request
    */
-  removeHobby(index: number) {
+  removeHobby(index: number): void {
     const hobbies = this.userForm?.get('hobbies') as FormArray;
     hobbies.removeAt(index);
   }
@@ -129,14 +129,14 @@ export class FeFormComponent implements OnInit, OnDestroy {
   /**
    * setting the value when user choose framework
    */
-  onFramworkChange() {
+  onFramworkChange(): void {
     this.userForm.controls['framework'].setValue(this.selectedFramework);
   }
 
   /**
    * setting the value when user choose framework version
    */
-  onVersionChange() {
+  onVersionChange(): void {
     this.userForm.controls['frameworkVersion'].setValue(this.selectedVersion);
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { User } from '../interfaces/user';
 /**
  * headers for requests
@@ -32,6 +33,9 @@ export class UserService {
 
   /**
    * adding a user to the db
+   *
+   * @param user a newly created user with data which user provided
+   *
    */
   addUser(user: User): Observable<User> {
     return this.http.post<User>(this.API_URL, user, httpOptions);
@@ -39,6 +43,9 @@ export class UserService {
 
   /**
    * getting the users and checking wheter the given email is already in the db
+   *
+   * @param email a user's email
+   *
    */
   checkEmailExists(email: string): Observable<boolean> {
     return this.http
