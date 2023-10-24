@@ -152,7 +152,6 @@
                   name="framework-version"
                   formControlName="frameworkVersion"
                   [value]="onVersionChange()"
-                  [disabled]="selectedFramework === ''"
                 >
                   <mat-option
                     *ngFor="let version of versions"
@@ -188,7 +187,7 @@
                     >
                       <input
                         matInput
-                        class="form-control"
+                        class="form-control hobby"
                         type="text"
                         id="{{ 'hobbyName' + index }}"
                         formControlName="{{ index }}"

@@ -60,7 +60,9 @@ export class FeFormComponent implements OnInit, OnDestroy {
         CustomValidators.minimumAgeValidator(),
       ]),
       framework: new FormControl('', [Validators.required]),
-      frameworkVersion: new FormControl('', [Validators.required]),
+      frameworkVersion: new FormControl({ value: '', disabled: true }, [
+        Validators.required,
+      ]),
       email: new FormControl<string>('', {
         validators: [Validators.required, Validators.email],
         asyncValidators: [CustomValidators.emailValidator(this.UserService)],
@@ -104,7 +106,13 @@ export class FeFormComponent implements OnInit, OnDestroy {
    *
    */
   get versions(): string[] | undefined {
+    this.enableVersion();
     return frameworksWithVer.get(this.selectedFramework);
+  }
+
+  /** Enable framework versions select after choosing the framework */
+  public enableVersion(): void {
+    this.userForm.get('frameworkVersion')?.enable();
   }
 
   get hobbies(): FormArray {

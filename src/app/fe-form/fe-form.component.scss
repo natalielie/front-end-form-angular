@@ -25,7 +25,11 @@ fieldset {
 }
 
 input {
-  width: 300px;
+  width: 270px;
+}
+
+input.hobby {
+  margin-top: 10px;
 }
 
 .mat-form-field-label-wrapper {
@@ -34,6 +38,10 @@ input {
 
 mat-form-field {
   width: 300px;
+}
+
+.mat-mdc-select-trigger {
+  margin-top: 10px;
 }
 
 button {
@@ -45,10 +53,8 @@ button {
   margin-bottom: 10px;
 }
 
-mat-select:disabled {
-  background-color: dimgrey !important;
-  color: linen;
-  opacity: 1;
+mat-selction {
+  margin-top: 10px;
 }
 
 li {
@@ -57,7 +63,7 @@ li {
 }
 
 #delete-button {
-  margin: -73px 310px 40px;
+  margin: -75px 310px 40px;
 }
 
 .btn.btn-primary {

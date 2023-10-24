@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 
 import { User } from '../interfaces/user';
 /**
@@ -48,8 +48,9 @@ export class UserService {
    *
    */
   checkEmailExists(email: string): Observable<boolean> {
-    return this.http
-      .get<User[]>(this.API_URL)
-      .pipe(map((users) => users.some((user) => user.email === email)));
+    return this.http.get<User[]>(this.API_URL).pipe(
+      delay(1000),
+      map((users) => users.some((user) => user.email === email))
+    );
   }
 }
