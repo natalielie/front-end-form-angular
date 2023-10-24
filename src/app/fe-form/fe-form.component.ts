@@ -76,12 +76,6 @@ export class FeFormComponent implements OnInit, OnDestroy {
         ]),
       ]),
     });
-    // temporarily detecting changes on input
-    this.userForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        console.log('changed value', value);
-      });
   }
 
   ngOnDestroy() {
