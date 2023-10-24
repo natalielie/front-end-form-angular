@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, delay, of, takeUntil, tap } from 'rxjs';
+import { Subject, delay, map, of, takeUntil, tap } from 'rxjs';
 import {
   FormBuilder,
   FormGroup,
@@ -75,12 +75,6 @@ export class FeFormComponent implements OnInit, OnDestroy {
         ]),
       ]),
     });
-    // temporarily detecting changes on input
-    this.userForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        console.log('changed value', value);
-      });
   }
 
   ngOnDestroy() {
@@ -150,33 +144,33 @@ export class FeFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      /*if (
-        !this.UserService
-          .checkEmailExists(this.userForm.controls['email'].value)
-          .subscribe()
-      ) {*/
-      this.UserService.addUser(this.userForm.value)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            of(null)
-              .pipe(
-                delay(3000),
-                tap(() => {
-                  this.formReference?.resetForm();
-                  this.selectedFramework = '';
-                  this.selectedVersion = '';
-                  this.hobbies.clear();
-                }),
-                takeUntil(this.destroy$)
-              )
-              .subscribe();
-          },
-        });
-    } /*else {
+      if (
+        !this.UserService.checkEmailExists(
+          this.userForm.controls['email'].value
+        )
+      ) {
+        this.UserService.addUser(this.userForm.value)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              of(null)
+                .pipe(
+                  delay(5000),
+                  tap(() => {
+                    this.formReference?.resetForm();
+                    this.selectedFramework = '';
+                    this.selectedVersion = '';
+                    this.hobbies.clear();
+                  }),
+                  takeUntil(this.destroy$)
+                )
+                .subscribe();
+            },
+          });
+      } else {
         alert('This email is already taken, choose another one');
       }
-    }*/ else {
+    } else {
       alert('Something went wrong, try again, please');
     }
   }

@@ -36,9 +36,9 @@ export class CustomValidators {
   /**
    * validion of existing email
    */
-  static emailValidator(configService: UserService): AsyncValidatorFn {
+  static emailValidator(userService: UserService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return configService.checkEmailExists(control.value).pipe(
+      return userService.checkEmailExists(control.value).pipe(
         map((isEmailTaken) => (isEmailTaken ? { emailTaken: true } : null)),
         catchError(() => of(null))
       );

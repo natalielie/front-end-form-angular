@@ -48,9 +48,8 @@ export class UserService {
    *
    */
   checkEmailExists(email: string): Observable<boolean> {
-    return this.http.get<User[]>(this.API_URL).pipe(
-      delay(1000),
-      map((users) => users.some((user) => user.email === email))
-    );
+    return this.http
+      .get<User[]>(this.API_URL)
+      .pipe(map((users) => users.some((user) => user.email === email)));
   }
 }
