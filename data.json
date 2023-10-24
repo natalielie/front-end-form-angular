@@ -1,14 +1,11 @@
 {
-  "users": {
-    "firstName": "Nataliia",
-    "lastName": "Malyshchenko",
-    "dateOfBirth": "2023-10-23T21:20:39.517Z",
-    "framework": "React",
-    "frameworkVersion": "3.2.4",
-    "email": "natmalysch@gmail.com",
-    "hobbies": [
-      "sdvsd",
-      "sdsdg"
-    ]
-  }
+  "users": [{
+    "firstName": "Kinder",
+    "lastName": "Bueno",
+    "email": "test.test@test.com",
+    "dateOfBirth": "04-05-1992",
+    "framework": "Angular",
+    "frameworkVersion": "1.2.1",
+    "hobby": ["playing the ukulele"]
+  }]
 }

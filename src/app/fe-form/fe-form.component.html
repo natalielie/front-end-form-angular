@@ -94,11 +94,7 @@
               </div>
               <mat-error
                 class="text-danger"
-                *ngIf="
-                  userForm.get('email')!.hasError('emailTaken') &&
-                  (userForm.controls['email'].dirty ||
-                    userForm.controls['email'].touched)
-                "
+                *ngIf="userForm.get('email')!.hasError('emailTaken')"
                 >Such email already exists
               </mat-error>
               <mat-error
