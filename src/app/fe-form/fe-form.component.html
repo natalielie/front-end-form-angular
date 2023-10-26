@@ -101,6 +101,7 @@
                 class="text-danger"
                 *ngIf="
                   userForm.controls['email'].invalid &&
+                  !userForm.get('email')!.hasError('emailTaken') &&
                   (userForm.controls['email'].dirty ||
                     userForm.controls['email'].touched)
                 "
@@ -115,10 +116,8 @@
                 <mat-label>Front-End Framework*</mat-label>
                 <mat-select
                   class="form-control"
-                  [(ngModel)]="selectedFramework"
                   name="framework"
                   formControlName="framework"
-                  [value]="onFramworkChange()"
                 >
                   <mat-option
                     *ngFor="let framework of frameworks"
@@ -144,7 +143,6 @@
                 <mat-label>Front-End Technology Version*</mat-label>
                 <mat-select
                   class="form-control"
-                  [(ngModel)]="selectedVersion"
                   name="framework-version"
                   formControlName="frameworkVersion"
                   [value]="onVersionChange()"

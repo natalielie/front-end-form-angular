@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, delay, map, of, takeUntil, tap } from 'rxjs';
+import { Subject, delay, map, of, takeUntil, tap, timer } from 'rxjs';
 import {
   FormBuilder,
   FormGroup,
@@ -7,7 +7,6 @@ import {
   FormControl,
   FormArray,
   FormGroupDirective,
-  MinLengthValidator,
 } from '@angular/forms';
 
 import { UserService } from '../services/user-api.service';
@@ -28,10 +27,7 @@ export class FeFormComponent implements OnInit, OnDestroy {
    * Allows working with a form reference, not form itself
    */
   @ViewChild('userForm', { static: false }) formReference?: FormGroupDirective;
-
   userForm!: FormGroup;
-  selectedFramework: string = '';
-  selectedVersion: string = '';
   /**
    * A subject to prevent memory leaks
    */
@@ -93,16 +89,27 @@ export class FeFormComponent implements OnInit, OnDestroy {
     return Array.from(frameworksWithVer.keys());
   }
 
+  get selectedFramework(): string {
+    if (this.userForm.controls['framework'].value === undefined) {
+      return '';
+    }
+    return this.userForm.controls['framework'].value;
+  }
+
   /**
    * getting versions from array with frameworks and versions
    *
-   * @param selectedFramework a framework wich user should to
+   * @param selectedFramework a framework wich user should
    * choose to be able to choose a version
    *
    */
   get versions(): string[] | undefined {
     this.enableVersion();
-    return frameworksWithVer.get(this.selectedFramework);
+    return frameworksWithVer.get(this.selectedFramework) || [];
+  }
+
+  get selectedVersion(): string {
+    return this.userForm.controls['frameworkVersion'].value;
   }
 
   /** Enable framework versions select after choosing the framework */
@@ -131,10 +138,10 @@ export class FeFormComponent implements OnInit, OnDestroy {
 
   /**
    * setting the value when user choose framework
-   */
+   
   onFramworkChange(): void {
     this.userForm.controls['framework'].setValue(this.selectedFramework);
-  }
+  }*/
 
   /**
    * setting the value when user choose framework version
@@ -149,13 +156,10 @@ export class FeFormComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            of(null)
+            timer(2000)
               .pipe(
-                delay(5000),
                 tap(() => {
                   this.formReference?.resetForm();
-                  this.selectedFramework = '';
-                  this.selectedVersion = '';
                   this.hobbies.clear();
                 }),
                 takeUntil(this.destroy$)

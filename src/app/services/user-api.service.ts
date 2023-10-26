@@ -25,13 +25,6 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   /**
-   * getting all users from the db
-   */
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.API_URL);
-  }
-
-  /**
    * adding a user to the db
    *
    * @param user a newly created user with data which user provided
