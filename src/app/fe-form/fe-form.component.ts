@@ -137,13 +137,6 @@ export class FeFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * setting the value when user choose framework
-   
-  onFramworkChange(): void {
-    this.userForm.controls['framework'].setValue(this.selectedFramework);
-  }*/
-
-  /**
    * setting the value when user choose framework version
    */
   onVersionChange(): void {
