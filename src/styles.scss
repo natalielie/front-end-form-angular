@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~bootstrap/dist/css/bootstrap.css";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+form {
+  width: 300px;
+  margin: 35px auto 100px;
+  display: block;
+  float: none;
+}
+.misc-bottom-padding {
+  margin: 8px 0 20px;
+}
+.misc-bottom-padding mat-label {
+  margin-right: 15px;
+}
+.title-center {
+  margin: 0 auto;
+}

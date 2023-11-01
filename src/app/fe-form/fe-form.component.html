@@ -1,0 +1,245 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <h3>Front-End Form</h3>
+        </div>
+        <div class="card-body">
+          <form class="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <fieldset>
+              <h4>Main Info</h4>
+              <div class="form-group">
+                <mat-label>First Name*</mat-label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    class="form-control"
+                    type="text"
+                    formControlName="firstName"
+                    placeholder="First Name"
+                  />
+                </mat-form-field>
+              </div>
+              <mat-error
+                class="text-danger"
+                *ngIf="
+                  userForm.controls['firstName'].invalid &&
+                  (userForm.controls['firstName'].dirty ||
+                    userForm.controls['firstName'].touched)
+                "
+              >
+                First name is required
+              </mat-error>
+
+              <div class="form-group">
+                <mat-label>Last Name*</mat-label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    class="form-control"
+                    type="text"
+                    formControlName="lastName"
+                    placeholder="Last Name"
+                  />
+                </mat-form-field>
+              </div>
+              <mat-error
+                class="text-danger"
+                *ngIf="
+                  userForm.controls['lastName'].invalid &&
+                  (userForm.controls['lastName'].dirty ||
+                    userForm.controls['lastName'].touched)
+                "
+              >
+                Last name is required
+              </mat-error>
+
+              <div class="form-group">
+                <mat-label>Date of Birth</mat-label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    formControlName="dateOfBirth"
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-error
+                  class="text-danger"
+                  *ngIf="
+                    userForm.get('dateOfBirth')?.hasError('ageInvalid') &&
+                    (userForm.controls['dateOfBirth'].dirty ||
+                      userForm.controls['dateOfBirth'].touched)
+                  "
+                  >Sorry, you are too young
+                </mat-error>
+              </div>
+
+              <div class="form-group">
+                <mat-label>Email*</mat-label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    class="form-control"
+                    type="email"
+                    formControlName="email"
+                    placeholder="Email"
+                  />
+                </mat-form-field>
+              </div>
+              <mat-error
+                class="text-danger"
+                *ngIf="userForm.get('email')!.hasError('emailTaken')"
+                >Such email already exists
+              </mat-error>
+              <mat-error
+                class="text-danger"
+                *ngIf="
+                  userForm.controls['email'].invalid &&
+                  !userForm.get('email')!.hasError('emailTaken') &&
+                  (userForm.controls['email'].dirty ||
+                    userForm.controls['email'].touched)
+                "
+              >
+                Email is required
+              </mat-error>
+            </fieldset>
+
+            <fieldset class="form-group">
+              <h4>Technology</h4>
+              <div class="form-group">
+                <mat-label>Front-End Framework*</mat-label>
+                <mat-select
+                  class="form-control"
+                  name="framework"
+                  formControlName="framework"
+                >
+                  <mat-option
+                    *ngFor="let framework of frameworks"
+                    [value]="framework"
+                  >
+                    {{ framework }}
+                  </mat-option>
+                </mat-select>
+              </div>
+
+              <mat-error
+                class="text-danger frameworks-error"
+                *ngIf="
+                  selectedFramework === '' &&
+                  (userForm.controls['framework'].dirty ||
+                    userForm.controls['framework'].touched)
+                "
+              >
+                Framework is required
+              </mat-error>
+
+              <div class="form-group framework">
+                <mat-label>Front-End Technology Version*</mat-label>
+                <mat-select
+                  class="form-control"
+                  name="framework-version"
+                  formControlName="frameworkVersion"
+                  [value]="onVersionChange()"
+                >
+                  <mat-option
+                    *ngFor="let version of versions"
+                    [value]="version"
+                  >
+                    {{ version }}
+                  </mat-option>
+                </mat-select>
+              </div>
+              <mat-error
+                class="text-danger frameworks-error"
+                *ngIf="
+                  selectedVersion === '' &&
+                  (userForm.controls['frameworkVersion'].dirty ||
+                    userForm.controls['frameworkVersion'].touched)
+                "
+              >
+                Framework version is required
+              </mat-error>
+            </fieldset>
+
+            <fieldset class="form-group" id="hobbies">
+              <h4>Hobbies</h4>
+              <ol>
+                <li
+                  formArrayName="hobbies"
+                  *ngFor="let control of hobbies.controls; let index = index"
+                >
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        class="form-control hobby"
+                        type="text"
+                        id="{{ 'hobbyName' + index }}"
+                        formControlName="{{ index }}"
+                        placeholder="Hobby name"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <button
+                    class="btn btn-danger"
+                    id="delete-button"
+                    type="button"
+                    (click)="removeHobby(index)"
+                    [disabled]="hobbies.controls.length <= 1"
+                  >
+                    ×
+                  </button>
+                  <mat-error
+                    class="text-danger"
+                    *ngIf="
+                      hobbies.controls[index].invalid &&
+                      hobbies.controls.length < 2 &&
+                      (hobbies.controls[index].dirty ||
+                        hobbies.controls[index].touched)
+                    "
+                  >
+                    At least 1 hobby is required
+                  </mat-error>
+                </li>
+              </ol>
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                (click)="addHobby()"
+              >
+                Add new hobby
+              </button>
+            </fieldset>
+            <div class="form-group" id="submit-button-div">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="!userForm.valid"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<pre>{{ userForm.value | json }}</pre>
+<ng-container *ngIf="userForm">
+  <h4>Form States</h4>
+  <div>Valid : {{ userForm.valid }}</div>
+  <div>Invalid : {{ userForm.invalid }}</div>
+  <div>Pristine : {{ userForm.pristine }}</div>
+  <div>Dirty : {{ userForm.dirty }}</div>
+  <div>Touched : {{ userForm.touched }}</div>
+</ng-container>
